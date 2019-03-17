@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import subprocess
+import os
 
 
 class Ui_MainWindow(object):
@@ -62,14 +63,15 @@ class Ui_MainWindow(object):
         #takes a photo with imagesnap 
         #install with homebrew: brew install imagesnap
         #image is saved as 'snapshot.jpg' in local working directory
-        subprocess.call(['/usr/local/bin/imagesnap', '-d', 'USB 2.0 Camera', 'snapshot.jpg'])
-        myPixmap = QtGui.QPixmap('snapshot.jpg')
-        myScaledPixmap = myPixmap.scaled(self.picLabel.size(), QtCore.Qt.KeepAspectRatio)
-        self.picLabel.setPixmap(myScaledPixmap)
         lego_type = self.comboBoxLegoType.currentText()
         image_name = lego_type + "_" + "{:0>5d}".format(self.counter) + ".jpg"
         self.counter += 1
+        subprocess.call(['/usr/local/bin/imagesnap', '-d', 'USB 2.0 Camera', image_name])
+        myPixmap = QtGui.QPixmap(image_name)
+        myScaledPixmap = myPixmap.scaled(self.picLabel.size(), QtCore.Qt.KeepAspectRatio)
+        self.picLabel.setPixmap(myScaledPixmap)
         self.imageLabel.setText(image_name)
+
 
 if __name__ == "__main__":
     import sys
