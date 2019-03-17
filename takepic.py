@@ -7,27 +7,41 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import subprocess
+
 
 class Ui_MainWindow(object):
+    counter = 0
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
         self.buttonTakePic = QtWidgets.QPushButton(self.centralwidget)
         self.buttonTakePic.setGeometry(QtCore.QRect(20, 40, 113, 32))
         self.buttonTakePic.setObjectName("buttonTakePic")
-        # self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
-        # self.graphicsView.setGeometry(QtCore.QRect(170, 20, 571, 391))
-        # self.graphicsView.setObjectName("graphicsView")
-        self.picLabel =  QtWidgets.QLabel(self.centralwidget)
-        self.picLabel.setGeometry(QtCore.QRect(170, 20, 571, 391))
-        self.legoNameEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.legoNameEdit.setGeometry(QtCore.QRect(240, 440, 321, 21))
-        self.legoNameEdit.setObjectName("legoNameEdit")
+        self.buttonTakePic.clicked.connect(self.take_photo)
+        
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(170, 440, 71, 20))
+        self.label.setGeometry(QtCore.QRect(170, 480, 71, 20))
         self.label.setObjectName("label")
+        
+        self.imageLabel = QtWidgets.QLabel(self.centralwidget)
+        self.imageLabel.setGeometry(QtCore.QRect(210, 450, 561, 16))
+        self.imageLabel.setText("")
+        self.imageLabel.setObjectName("imageLabel")
+
+        self.picLabel = QtWidgets.QLabel(self.centralwidget)
+        self.picLabel.setGeometry(QtCore.QRect(210, 40, 551, 371))
+        self.picLabel.setText("")
+        self.picLabel.setObjectName("picLabel")
+        
+        self.comboBoxLegoType = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBoxLegoType.setGeometry(QtCore.QRect(240, 480, 331, 26))
+        self.comboBoxLegoType.setObjectName("comboBoxLegoType")
+        
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -41,7 +55,21 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.buttonTakePic.setText(_translate("MainWindow", "Take Picture"))
         self.label.setText(_translate("MainWindow", "Lego Type"))
+        self.comboBoxLegoType.addItems(['3x2_Brick','2x2_Brick'])
 
+
+    def take_photo(self,MainWindow):
+        #takes a photo with imagesnap 
+        #install with homebrew: brew install imagesnap
+        #image is saved as 'snapshot.jpg' in local working directory
+        subprocess.call(['/usr/local/bin/imagesnap', '-d', 'USB 2.0 Camera', 'snapshot.jpg'])
+        myPixmap = QtGui.QPixmap('snapshot.jpg')
+        myScaledPixmap = myPixmap.scaled(self.picLabel.size(), QtCore.Qt.KeepAspectRatio)
+        self.picLabel.setPixmap(myScaledPixmap)
+        lego_type = self.comboBoxLegoType.currentText()
+        image_name = lego_type + "_" + "{:0>5d}".format(self.counter) + ".jpg"
+        self.counter += 1
+        self.imageLabel.setText(image_name)
 
 if __name__ == "__main__":
     import sys
@@ -50,8 +78,6 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    myPixmap = QtGui.QPixmap('snapshot.jpg')
-    myScaledPixmap = myPixmap.scaled(ui.picLabel.size(), QtCore.Qt.KeepAspectRatio)
-    ui.picLabel.setPixmap(myScaledPixmap)
+    #ui.comboBoxLegoType.currentIndex = 0
     sys.exit(app.exec_())
 
