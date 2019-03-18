@@ -57,16 +57,23 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.buttonTakePic.setText(_translate("MainWindow", "Take Picture"))
         self.label.setText(_translate("MainWindow", "Lego Type"))
+        # self.comboBoxLegoType.addItems(
+        #     [
+        #         "3001_2x4_Brick",
+        #         "3003_2x2_Brick",
+        #         "3495_2x2_Roof_Tile_Steep_Slopped",
+        #         "3010_1x4_Brick",
+        #         "3009_1x6_Brick",
+        #     ]
+        # )
         self.comboBoxLegoType.addItems(
             [
-                "3001_2x4_Brick",
-                "3003_2x2_Brick",
-                "3495_2x2_Roof_Tile_Steep_Slopped",
-                "3010_1x4_Brick",
-                "3009_1x6_Brick",
+               "Penny",
+               "Quarter",
+               "Dime",
+               "Nickel"
             ]
         )
-        
 
     def take_photo(self, MainWindow):
         # takes a photo with imagesnap
