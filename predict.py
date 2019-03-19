@@ -13,6 +13,82 @@ from PIL import Image
 import turicreate as tc
 import sys
 
+DEFAULT_STYLE = """
+QProgressBar{
+    border: 2px solid grey;
+    border-radius: 5px;
+    text-align: center
+}
+
+QProgressBar::chunk {
+    background-color: lightblue;
+    width: 8px;
+    margin: 0.5px;
+}
+"""
+
+COMPLETED_STYLE = """
+QProgressBar{
+    border: 2px solid grey;
+    border-radius: 5px;
+    text-align: center
+}
+
+QProgressBar::chunk {
+    background-color: red;
+    width: 8px;
+    margin: 0.5px;
+}
+"""
+
+GAUGE = """
+import QtQuick 2.2
+import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
+import QtQuick.Extras 1.4
+
+Rectangle {
+    width: 80
+    height: 200
+
+    Timer {
+        running: true
+        repeat: true
+        interval: 2000
+        onTriggered: gauge.value = gauge.value == gauge.maximumValue ? 5 : gauge.maximumValue
+    }
+
+    Gauge {
+        id: gauge
+        anchors.fill: parent
+        anchors.margins: 10
+
+        value: 5
+        Behavior on value {
+            NumberAnimation {
+                duration: 1000
+            }
+        }
+
+        style: GaugeStyle {
+            valueBar: Rectangle {
+                implicitWidth: 16
+                color: Qt.rgba(gauge.value / gauge.maximumValue, 0, 1 - gauge.value / gauge.maximumValue, 1)
+            }
+        }
+    }
+}
+"""
+
+# class MyProgressBar(QtWidgets.QProgressBar):
+#     def __init__(self, parent = None):
+#         QtWidgets.QProgressBar.__init__(self, parent)
+#         self.setStyleSheet(DEFAULT_STYLE)
+
+#     def setValue(self, value):
+#         QtWidgets.QProgressBar.setValue(self, value)
+#         if value <= self.maximum():
+#             self.setStyleSheet(COMPLETED_STYLE)
 
 class Ui_MainWindow(object):
 
@@ -76,6 +152,13 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        # self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
+        # self.progressBar = MyProgressBar(self.centralwidget)
+        # self.progressBar.setGeometry(QtCore.QRect(710, 50, 61, 391))
+        # self.progressBar.setProperty("value", 0)
+        # self.progressBar.setOrientation(QtCore.Qt.Vertical)
+        # self.progressBar.setObjectName("progressBar")
+
         self.load_model_names(MainWindow)
 
         self.retranslateUi(MainWindow)
@@ -121,10 +204,15 @@ class Ui_MainWindow(object):
         # Save predictions to an SArray
         predictions = model.classify(data)
 
-        self.textEditPrediction.setPlainText(predictions[0]["class"])
+        class_name = predictions[0]["class"]
+        probability = predictions[0]["probability"]
+        self.textEditPrediction.setPlainText(class_name)
         self.textEditProbability.setPlainText(
-            "{:.2%}".format(predictions[0]["probability"])
+            "{:.2%}".format(probability)
         )
+
+        # self.progressBar.setValue(probability*100)
+        # self.progressBar.setTextVisible(True)
 
     def load_model_names(self, MainWindow):
         subfolders = [
@@ -145,8 +233,6 @@ def crop_image(image_path, coords, saved_location):
 
 
 if __name__ == "__main__":
-    import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()

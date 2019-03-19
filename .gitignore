@@ -1,0 +1,9 @@
+*.jpg
+t.py
+*.model/
+kaggle/
+*.sframe/
+lego/
+lego
+*.mlmodel
+
