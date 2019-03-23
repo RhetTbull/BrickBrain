@@ -14,6 +14,7 @@ import re
 
 class Ui_MainWindow(object):
     counter = 0
+    image_name = ""
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -71,7 +72,7 @@ class Ui_MainWindow(object):
         #        "Nickel"
         #     ]
         # )
-        
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -91,19 +92,22 @@ class Ui_MainWindow(object):
         # takes a photo with imagesnap
         # install with homebrew: brew install imagesnap
         # image is saved as 'snapshot.jpg' in local working directory
+
+        camera = self.comboBoxCamera.currentText()
         lego_type = self.comboBoxLegoType.currentText()
-        image_name = lego_type + "_" + "{:0>5d}".format(self.counter) + ".jpg"
+
+        self.image_name = lego_type + "_" + "{:0>5d}".format(self.counter) + ".jpg"
         self.counter += 1
         subprocess.call(
-            ["/usr/local/bin/imagesnap", "-d", "USB 2.0 Camera", image_name]
+            ["/usr/local/bin/imagesnap", "-d", camera, self.image_name]
         )
-        crop_image(image_name, (420, 0, 1500, 1080), image_name)
-        myPixmap = QtGui.QPixmap(image_name)
+        crop_image(self.image_name, (420, 0, 1500, 1080), self.image_name)
+        myPixmap = QtGui.QPixmap(self.image_name)
         myScaledPixmap = myPixmap.scaled(
             self.picLabel.size(), QtCore.Qt.KeepAspectRatio
         )
         self.picLabel.setPixmap(myScaledPixmap)
-        self.imageLabel.setText(image_name)
+        self.imageLabel.setText(self.image_name)
 
 
 def crop_image(image_path, coords, saved_location):
