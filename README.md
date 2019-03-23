@@ -14,6 +14,10 @@ Dependencies:
 
 * turicreate [https://github.com/apple/turicreate]
 
+* imagensnap (needed to take picture using web cam) [https://github.com/rharder/imagesnap]
+
+* This only works on OS X
+
 License:
 
 GPL v3 because that's what PyQt uses.  turicreate itself is licensed under a BSD-3 variant.
