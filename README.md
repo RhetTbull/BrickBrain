@@ -14,3 +14,7 @@ Dependencies:
 
 * turicreate [https://github.com/apple/turicreate]
 
+License:
+
+GPL v3 because that's what PyQt uses.  turicreate itself is licensed under a BSD-3 variant.
+
