@@ -12,6 +12,8 @@ Dependencies:
 
 * pyqt [https://www.riverbankcomputing.com/software/pyqt/download5]
 
+* User interface created with QT Designer
+
 * turicreate [https://github.com/apple/turicreate]
 
 * imagensnap (needed to take picture using web cam) [https://github.com/rharder/imagesnap]
