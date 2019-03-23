@@ -6,89 +6,13 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 import subprocess
 import os
 from PIL import Image
 import turicreate as tc
 import sys
-
-DEFAULT_STYLE = """
-QProgressBar{
-    border: 2px solid grey;
-    border-radius: 5px;
-    text-align: center
-}
-
-QProgressBar::chunk {
-    background-color: lightblue;
-    width: 8px;
-    margin: 0.5px;
-}
-"""
-
-COMPLETED_STYLE = """
-QProgressBar{
-    border: 2px solid grey;
-    border-radius: 5px;
-    text-align: center
-}
-
-QProgressBar::chunk {
-    background-color: red;
-    width: 8px;
-    margin: 0.5px;
-}
-"""
-
-GAUGE = """
-import QtQuick 2.2
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
-import QtQuick.Extras 1.4
-
-Rectangle {
-    width: 80
-    height: 200
-
-    Timer {
-        running: true
-        repeat: true
-        interval: 2000
-        onTriggered: gauge.value = gauge.value == gauge.maximumValue ? 5 : gauge.maximumValue
-    }
-
-    Gauge {
-        id: gauge
-        anchors.fill: parent
-        anchors.margins: 10
-
-        value: 5
-        Behavior on value {
-            NumberAnimation {
-                duration: 1000
-            }
-        }
-
-        style: GaugeStyle {
-            valueBar: Rectangle {
-                implicitWidth: 16
-                color: Qt.rgba(gauge.value / gauge.maximumValue, 0, 1 - gauge.value / gauge.maximumValue, 1)
-            }
-        }
-    }
-}
-"""
-
-# class MyProgressBar(QtWidgets.QProgressBar):
-#     def __init__(self, parent = None):
-#         QtWidgets.QProgressBar.__init__(self, parent)
-#         self.setStyleSheet(DEFAULT_STYLE)
-
-#     def setValue(self, value):
-#         QtWidgets.QProgressBar.setValue(self, value)
-#         if value <= self.maximum():
-#             self.setStyleSheet(COMPLETED_STYLE)
+import re
 
 class Ui_MainWindow(object):
 
@@ -98,71 +22,61 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(810, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-
         self.buttonTakePic = QtWidgets.QPushButton(self.centralwidget)
-        self.buttonTakePic.setGeometry(QtCore.QRect(20, 40, 113, 32))
+        self.buttonTakePic.setGeometry(QtCore.QRect(10, 80, 113, 32))
         self.buttonTakePic.setObjectName("buttonTakePic")
-        self.buttonTakePic.clicked.connect(self.take_photo)
-
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(170, 460, 71, 20))
+        self.label.setGeometry(QtCore.QRect(370, 460, 71, 20))
         self.label.setObjectName("label")
-
         self.picLabel = QtWidgets.QLabel(self.centralwidget)
-        self.picLabel.setGeometry(QtCore.QRect(210, 40, 551, 371))
+        self.picLabel.setGeometry(QtCore.QRect(380, 10, 401, 401))
         self.picLabel.setText("")
         self.picLabel.setObjectName("picLabel")
-
         self.imageLabel = QtWidgets.QLabel(self.centralwidget)
-        self.imageLabel.setGeometry(QtCore.QRect(240, 430, 491, 16))
+        self.imageLabel.setGeometry(QtCore.QRect(380, 430, 411, 20))
         self.imageLabel.setText("")
         self.imageLabel.setObjectName("imageLabel")
-
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(170, 500, 71, 20))
+        self.label_2.setGeometry(QtCore.QRect(370, 500, 71, 20))
         self.label_2.setObjectName("label_2")
-
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(170, 540, 71, 20))
-        self.label_3.setObjectName("label_3")
-
         self.textEditPrediction = QtWidgets.QPlainTextEdit(self.centralwidget)
-        self.textEditPrediction.setGeometry(QtCore.QRect(240, 460, 351, 21))
+        self.textEditPrediction.setGeometry(QtCore.QRect(440, 460, 351, 21))
         self.textEditPrediction.setObjectName("textEditPrediction")
-
         self.textEditProbability = QtWidgets.QPlainTextEdit(self.centralwidget)
-        self.textEditProbability.setGeometry(QtCore.QRect(240, 500, 351, 21))
+        self.textEditProbability.setGeometry(QtCore.QRect(440, 500, 351, 21))
         self.textEditProbability.setObjectName("textEditProbability")
-
-        self.comboBoxModelName = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBoxModelName.setGeometry(QtCore.QRect(240, 540, 351, 26))
-        self.comboBoxModelName.setObjectName("comboBoxModelName")
-
         self.buttonPredict = QtWidgets.QPushButton(self.centralwidget)
-        self.buttonPredict.setGeometry(QtCore.QRect(20, 80, 113, 32))
+        self.buttonPredict.setGeometry(QtCore.QRect(10, 120, 113, 32))
         self.buttonPredict.setObjectName("buttonPredict")
-        self.buttonPredict.clicked.connect(self.predict)
-        self.buttonPredict.setEnabled(False)
-
+        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_3.setGeometry(QtCore.QRect(370, 540, 71, 20))
+        self.label_3.setObjectName("label_3")
+        self.comboBoxModelName = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBoxModelName.setGeometry(QtCore.QRect(440, 540, 351, 26))
+        self.comboBoxModelName.setObjectName("comboBoxModelName")
+        self.comboBoxCamera = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBoxCamera.setGeometry(QtCore.QRect(70, 20, 291, 26))
+        self.comboBoxCamera.setObjectName("comboBoxCamera")
+        self.labelCamera = QtWidgets.QLabel(self.centralwidget)
+        self.labelCamera.setGeometry(QtCore.QRect(20, 20, 71, 20))
+        self.labelCamera.setObjectName("labelCamera")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-        # self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-        # self.progressBar = MyProgressBar(self.centralwidget)
-        # self.progressBar.setGeometry(QtCore.QRect(710, 50, 61, 391))
-        # self.progressBar.setProperty("value", 0)
-        # self.progressBar.setOrientation(QtCore.Qt.Vertical)
-        # self.progressBar.setObjectName("progressBar")
-
-        self.load_model_names(MainWindow)
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        # extra setup
+        self.buttonPredict.clicked.connect(self.predict)
+        self.buttonPredict.setEnabled(False)
+        self.load_model_names(MainWindow)
+        self.load_cameras(MainWindow)
+        self.buttonTakePic.clicked.connect(self.take_photo)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -172,15 +86,25 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "Probability:"))
         self.buttonPredict.setText(_translate("MainWindow", "Predict"))
         self.label_3.setText(_translate("MainWindow", "       Model:"))
+        self.labelCamera.setText(_translate("MainWindow","Camera:"))
+
+    def load_cameras(self, MainWindow):
+        output = subprocess.check_output(
+            ["/usr/local/bin/imagesnap", "-l"], universal_newlines=True
+        )
+        cameras = re.findall(r'\[(.*?)\]\[',output)
+        self.comboBoxCamera.addItems(cameras)
 
     def take_photo(self, MainWindow):
         # takes a photo with imagesnap
         # install with homebrew: brew install imagesnap
         # image is saved as 'snapshot.jpg' in local working directory
+
+        camera = self.comboBoxCamera.currentText()
         self.image_name = "test" + "_" + "{:0>5d}".format(self.counter) + ".jpg"
         self.counter += 1
         subprocess.call(
-            ["/usr/local/bin/imagesnap", "-d", "USB 2.0 Camera", self.image_name]
+            ["/usr/local/bin/imagesnap", "-d", camera, self.image_name]
         )
         crop_image(self.image_name, (420, 0, 1500, 1080), self.image_name)
         myPixmap = QtGui.QPixmap(self.image_name)
@@ -210,10 +134,7 @@ class Ui_MainWindow(object):
         self.textEditProbability.setPlainText(
             "{:.2%}".format(probability)
         )
-
-        # self.progressBar.setValue(probability*100)
-        # self.progressBar.setTextVisible(True)
-
+        
     def load_model_names(self, MainWindow):
         subfolders = [
             f.name for f in os.scandir(".") if f.is_dir() and ".model" in f.name
