@@ -1,10 +1,5 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'testpic.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.2
-#
-# WARNING! All changes made in this file will be lost!
+# Test image classification model created by train.py
+# By Camden Turnbull with help from dad (Rhet Turnbull)
 
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 import subprocess
@@ -134,7 +129,7 @@ class Ui_MainWindow(object):
         self.textEditProbability.setPlainText(
             "{:.2%}".format(probability)
         )
-        
+
     def load_model_names(self, MainWindow):
         subfolders = [
             f.name for f in os.scandir(".") if f.is_dir() and ".model" in f.name

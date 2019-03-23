@@ -1,10 +1,5 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'takepic.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.2
-#
-# WARNING! All changes made in this file will be lost!
+# Take pictures with webcame to train image classifier model
+# By Camden Turnbull with help from dad (Rhet Turnbull)
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import subprocess

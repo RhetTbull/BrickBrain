@@ -1,5 +1,11 @@
+# Train image classification model with pictures taken by takepic.py
+# By Camden Turnbull with help from dad (Rhet Turnbull)
+
 import turicreate as tc
 import os.path
+
+# Change this to the name of the folder with the pictures
+# Each category of picture should be in its own sub-folder
 
 photo_folder = 'topview_23March2019'
 
