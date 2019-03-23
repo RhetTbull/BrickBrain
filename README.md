@@ -18,6 +18,8 @@ Dependencies:
 
 * This only works on OS X
 
+* You'll need a USB web cam.  I used this one: [https://smile.amazon.com/gp/product/B012CH5F58/ref=oh_aui_search_asin_title?ie=UTF8&psc=1]
+
 License:
 
 GPL v3 because that's what PyQt uses.  turicreate itself is licensed under a BSD-3 variant.
