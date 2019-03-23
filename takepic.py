@@ -10,7 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import subprocess
 import os
 from PIL import Image
-
+import re
 
 class Ui_MainWindow(object):
     counter = 0
@@ -20,30 +20,29 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-
         self.buttonTakePic = QtWidgets.QPushButton(self.centralwidget)
-        self.buttonTakePic.setGeometry(QtCore.QRect(20, 40, 113, 32))
+        self.buttonTakePic.setGeometry(QtCore.QRect(10, 70, 113, 32))
         self.buttonTakePic.setObjectName("buttonTakePic")
-        self.buttonTakePic.clicked.connect(self.take_photo)
-
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(170, 480, 71, 20))
+        self.label.setGeometry(QtCore.QRect(350, 480, 71, 20))
         self.label.setObjectName("label")
-
-        self.imageLabel = QtWidgets.QLabel(self.centralwidget)
-        self.imageLabel.setGeometry(QtCore.QRect(210, 450, 561, 16))
-        self.imageLabel.setText("")
-        self.imageLabel.setObjectName("imageLabel")
-
         self.picLabel = QtWidgets.QLabel(self.centralwidget)
-        self.picLabel.setGeometry(QtCore.QRect(210, 40, 551, 381))
+        self.picLabel.setGeometry(QtCore.QRect(350, 50, 371, 371))
         self.picLabel.setText("")
         self.picLabel.setObjectName("picLabel")
-
         self.comboBoxLegoType = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBoxLegoType.setGeometry(QtCore.QRect(240, 480, 331, 26))
+        self.comboBoxLegoType.setGeometry(QtCore.QRect(420, 480, 331, 26))
         self.comboBoxLegoType.setObjectName("comboBoxLegoType")
-
+        self.imageLabel = QtWidgets.QLabel(self.centralwidget)
+        self.imageLabel.setGeometry(QtCore.QRect(350, 450, 421, 20))
+        self.imageLabel.setText("")
+        self.imageLabel.setObjectName("imageLabel")
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setGeometry(QtCore.QRect(16, 38, 50, 10))
+        self.label_2.setObjectName("label_2")
+        self.comboBoxCamera = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBoxCamera.setGeometry(QtCore.QRect(70, 30, 241, 26))
+        self.comboBoxCamera.setObjectName("comboBoxCamera")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -52,28 +51,41 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        #extra setup code
+        self.buttonTakePic.clicked.connect(self.take_photo)
+        self.load_cameras(MainWindow)
+        self.comboBoxLegoType.addItems(
+            [
+                "3001_2x4_Brick",
+                "3003_2x2_Brick",
+                "3495_2x2_Roof_Tile_Steep_Slopped",
+                "3010_1x4_Brick",
+                "3009_1x6_Brick",
+            ]
+        )
+        # self.comboBoxLegoType.addItems(
+        #     [
+        #        "Penny",
+        #        "Quarter",
+        #        "Dime",
+        #        "Nickel"
+        #     ]
+        # )
+        
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.buttonTakePic.setText(_translate("MainWindow", "Take Picture"))
         self.label.setText(_translate("MainWindow", "Lego Type"))
-        # self.comboBoxLegoType.addItems(
-        #     [
-        #         "3001_2x4_Brick",
-        #         "3003_2x2_Brick",
-        #         "3495_2x2_Roof_Tile_Steep_Slopped",
-        #         "3010_1x4_Brick",
-        #         "3009_1x6_Brick",
-        #     ]
-        # )
-        self.comboBoxLegoType.addItems(
-            [
-               "Penny",
-               "Quarter",
-               "Dime",
-               "Nickel"
-            ]
+        self.label_2.setText(_translate("MainWindow", "Camera:"))
+
+
+    def load_cameras(self, MainWindow):
+        output = subprocess.check_output(
+            ["/usr/local/bin/imagesnap", "-l"], universal_newlines=True
         )
+        cameras = re.findall(r'\[(.*?)\]\[',output)
+        self.comboBoxCamera.addItems(cameras)
 
     def take_photo(self, MainWindow):
         # takes a photo with imagesnap

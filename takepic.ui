@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="buttonTakePic">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>40</y>
+      <x>10</x>
+      <y>70</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -30,7 +30,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>350</x>
       <y>480</y>
       <width>71</width>
       <height>20</height>
@@ -43,9 +43,9 @@
    <widget class="QLabel" name="picLabel">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>40</y>
-      <width>551</width>
+      <x>350</x>
+      <y>50</y>
+      <width>371</width>
       <height>371</height>
      </rect>
     </property>
@@ -56,7 +56,7 @@
    <widget class="QComboBox" name="comboBoxLegoType">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>420</x>
       <y>480</y>
       <width>331</width>
       <height>26</height>
@@ -66,14 +66,37 @@
    <widget class="QLabel" name="imageLabel">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>350</x>
       <y>450</y>
-      <width>561</width>
-      <height>16</height>
+      <width>421</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>16</x>
+      <y>38</y>
+      <width>50</width>
+      <height>10</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Camera:</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxCamera">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>30</y>
+      <width>241</width>
+      <height>26</height>
+     </rect>
     </property>
    </widget>
   </widget>

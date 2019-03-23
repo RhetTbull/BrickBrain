@@ -1,7 +1,7 @@
 import turicreate as tc
 import os.path
 
-photo_folder = 'kaggle'
+photo_folder = 'topview_23March2019'
 
 # Load images (Note: you can ignore 'Not a JPEG file' errors)
 print("loading images")
