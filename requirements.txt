@@ -1,0 +1,11 @@
+# Requirements for BrickBrain
+# create virtual environment with conda (must use python <= 3.6 for turicreate):
+# conda create --name brickbrain python=3.6
+# Install with: 
+# pip install -r requirements.txt
+
+Pillow
+turicreate >= 5.3
+PyQt5 >= 5.12.1
+numpy <1.15.0,>=1.8.2 
+requests <2.19.0,>=2.18.4
