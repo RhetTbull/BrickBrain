@@ -1,14 +1,17 @@
 # Test image classification model created by train.py
 # By Camden Turnbull with help from dad (Rhet Turnbull)
 
+# import libraries
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 import subprocess
 import os
 from PIL import Image
+# use turicreate machine learning library to do pprediction
 import turicreate as tc
 import sys
 import re
 
+# created by QT Designer which I used to create ui
 class Ui_MainWindow(object):
 
     counter = 0
@@ -83,13 +86,15 @@ class Ui_MainWindow(object):
         self.label_3.setText(_translate("MainWindow", "       Model:"))
         self.labelCamera.setText(_translate("MainWindow","Camera:"))
 
+    # load cameras using imagesnap
     def load_cameras(self, MainWindow):
         output = subprocess.check_output(
             ["/usr/local/bin/imagesnap", "-l"], universal_newlines=True
         )
         cameras = re.findall(r'\[(.*?)\]\[',output)
         self.comboBoxCamera.addItems(cameras)
-
+    
+    # take pic using image snap 
     def take_photo(self, MainWindow):
         # takes a photo with imagesnap
         # install with homebrew: brew install imagesnap
@@ -98,9 +103,11 @@ class Ui_MainWindow(object):
         camera = self.comboBoxCamera.currentText()
         self.image_name = "test" + "_" + "{:0>5d}".format(self.counter) + ".jpg"
         self.counter += 1
+        # call imagesnap to take pic
         subprocess.call(
             ["/usr/local/bin/imagesnap", "-d", camera, self.image_name]
         )
+        # crop the picture too just the middle
         crop_image(self.image_name, (420, 0, 1500, 1080), self.image_name)
         myPixmap = QtGui.QPixmap(self.image_name)
         myScaledPixmap = myPixmap.scaled(
@@ -112,6 +119,7 @@ class Ui_MainWindow(object):
         self.textEditPrediction.setPlainText("")
         self.textEditProbability.setPlainText("")
 
+    # predict what image is based on selected model
     def predict(self, MainWindow):
         self.model_name = self.comboBoxModelName.currentText()
         # Load the data
@@ -123,13 +131,18 @@ class Ui_MainWindow(object):
         # Save predictions to an SArray
         predictions = model.classify(data)
 
+        # class name is kind of lego brick 
         class_name = predictions[0]["class"]
+        # probability of the prediction
         probability = predictions[0]["probability"]
+        # update Ui to show predicted class and probability
         self.textEditPrediction.setPlainText(class_name)
+        # format probability to only have two digits after decimal
         self.textEditProbability.setPlainText(
             "{:.2%}".format(probability)
         )
 
+    # find all models and add them to model dropdown list
     def load_model_names(self, MainWindow):
         subfolders = [
             f.name for f in os.scandir(".") if f.is_dir() and ".model" in f.name

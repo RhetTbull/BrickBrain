@@ -1,0 +1,55 @@
+# log from training run for "topview_23March2019" model
+# This data set contains about 600 images of 5 different LEGO brick classes
+
+(scifair) Rhet-and-Sarahs-iMac:scifair rhet$ python train.py
+loading images
+adding names
+creating training data and testing data
+saving data frames
+classifying
+[11:24:06] src/nnvm/legacy_json_util.cc:190: Loading symbol saved by previous version v0.8.0. Attempting to upgrade...
+[11:24:06] src/nnvm/legacy_json_util.cc:198: Symbol successfully upgraded!
+Performing feature extraction on resized images...
+Completed  64/408
+Completed 128/408
+Completed 192/408
+Completed 256/408
+Completed 320/408
+Completed 384/408
+Completed 408/408
+PROGRESS: Creating a validation set from 5 percent of training data. This may take a while.
+          You can set ``validation_set=None`` to disable validation tracking.
+
+Logistic regression:
+--------------------------------------------------------
+Number of examples          : 391
+Number of classes           : 5
+Number of feature columns   : 1
+Number of unpacked features : 2048
+Number of coefficients      : 8196
+Starting L-BFGS
+--------------------------------------------------------
++-----------+----------+-----------+--------------+-------------------+---------------------+
+| Iteration | Passes   | Step size | Elapsed Time | Training Accuracy | Validation Accuracy |
++-----------+----------+-----------+--------------+-------------------+---------------------+
+| 0         | 1        | NaN       | 1.041915     | 0.189258          | 0.235294            |
+| 1         | 6        | 0.000107  | 1.253200     | 0.278772          | 0.117647            |
+| 2         | 8        | 1.000000  | 1.356298     | 0.480818          | 0.411765            |
+| 3         | 9        | 1.000000  | 1.432672     | 0.813299          | 0.823529            |
+| 4         | 10       | 1.000000  | 1.510539     | 0.887468          | 0.882353            |
+| 5         | 11       | 1.000000  | 1.675905     | 0.918159          | 0.882353            |
+| 10        | 16       | 1.000000  | 2.125638     | 0.974425          | 0.941176            |
+| 31        | 40       | 1.000000  | 4.097909     | 1.000000          | 1.000000            |
++-----------+----------+-----------+--------------+-------------------+---------------------+
+SUCCESS: Optimal solution found.
+
+creating predications
+Performing feature extraction on resized images...
+Completed 64/98
+Completed 98/98
+1.0
+saving model
+[11:26:17] src/nnvm/legacy_json_util.cc:190: Loading symbol saved by previous version v0.8.0. Attempting to upgrade...
+[11:26:17] src/nnvm/legacy_json_util.cc:198: Symbol successfully upgraded!
+(scifair) Rhet-and-Sarahs-iMac:scifair rhet$ 
+

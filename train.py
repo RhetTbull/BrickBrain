@@ -1,22 +1,26 @@
 # Train image classification model with pictures taken by takepic.py
 # By Camden Turnbull with help from dad (Rhet Turnbull)
 
+# use supervised learning algorithm from TuriCreate
 import turicreate as tc
 import os.path
 
 # Change this to the name of the folder with the pictures
 # Each category of picture should be in its own sub-folder
 
-photo_folder = 'topview_23March2019'
+# folder containing lego pics
+photo_folder = 'combined-lego'
 
 # Load images (Note: you can ignore 'Not a JPEG file' errors)
 print("loading images")
 data = tc.image_analysis.load_images(photo_folder, with_path=True)
 
 # From the path-name, create a label column
+# Use the name of each subfolder as the class type
 print("adding names")
 data['label'] = data['path'].apply(lambda path: os.path.basename(os.path.dirname(path)))
 
+# use 80% of pics to train and 20% to test on
 print("creating training data and testing data")
 train_data, test_data = data.random_split(0.8)
 

@@ -1,14 +1,18 @@
 # Take pictures with webcame to train image classifier model
 # By Camden Turnbull with help from dad (Rhet Turnbull)
 
+# import all used code libraries
 from PyQt5 import QtCore, QtGui, QtWidgets
 import subprocess
 import os
 from PIL import Image
 import re
 
+# this code created by QT Designer to design the user interface
 class Ui_MainWindow(object):
+    # counter track how many pictures taken
     counter = 0
+    # image name to save on disk
     image_name = ""
 
     def setupUi(self, MainWindow):
@@ -49,6 +53,8 @@ class Ui_MainWindow(object):
 
         #extra setup code
         self.buttonTakePic.clicked.connect(self.take_photo)
+        # when button clicked, take picture
+        # get list of cameras attached to computer
         self.load_cameras(MainWindow)
         self.comboBoxLegoType.addItems(
             [
@@ -76,6 +82,7 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "Camera:"))
 
 
+    # use imagesnap program to get list of cameras
     def load_cameras(self, MainWindow):
         output = subprocess.check_output(
             ["/usr/local/bin/imagesnap", "-l"], universal_newlines=True
@@ -83,6 +90,7 @@ class Ui_MainWindow(object):
         cameras = re.findall(r'\[(.*?)\]\[',output)
         self.comboBoxCamera.addItems(cameras)
 
+    # take pic w/ image snap
     def take_photo(self, MainWindow):
         # takes a photo with imagesnap
         # install with homebrew: brew install imagesnap
@@ -91,11 +99,15 @@ class Ui_MainWindow(object):
         camera = self.comboBoxCamera.currentText()
         lego_type = self.comboBoxLegoType.currentText()
 
+        # format image name to be legotype_00001.jpg etc.
         self.image_name = lego_type + "_" + "{:0>5d}".format(self.counter) + ".jpg"
         self.counter += 1
+        # call imagesnap to take pic
         subprocess.call(
             ["/usr/local/bin/imagesnap", "-d", camera, self.image_name]
         )
+
+        # crop the picture to just middle
         crop_image(self.image_name, (420, 0, 1500, 1080), self.image_name)
         myPixmap = QtGui.QPixmap(self.image_name)
         myScaledPixmap = myPixmap.scaled(
@@ -104,7 +116,7 @@ class Ui_MainWindow(object):
         self.picLabel.setPixmap(myScaledPixmap)
         self.imageLabel.setText(self.image_name)
 
-
+# crop image and save  
 def crop_image(image_path, coords, saved_location):
     """
     @param image_path: The path to the image to edit
