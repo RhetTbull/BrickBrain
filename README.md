@@ -15,17 +15,17 @@ This project consists of 4 scripts:
 
 Dependencies:
 
-* pyqt [https://www.riverbankcomputing.com/software/pyqt/download5]
+* [pyqt](https://www.riverbankcomputing.com/software/pyqt/download5)
 
 * User interface created with QT Designer
 
-* turicreate [https://github.com/apple/turicreate]
+* [turicreate](https://github.com/apple/turicreate)
 
-* imagensnap (needed to take picture using web cam) [https://github.com/rharder/imagesnap]
+* [imagensnap (needed to take picture using web cam)](https://github.com/rharder/imagesnap)
 
 * This only works on OS X
 
-* You'll need a USB web cam.  We used this one: [https://smile.amazon.com/gp/product/B012CH5F58/ref=oh_aui_search_asin_title?ie=UTF8&psc=1]
+* You'll need a USB web cam.  We used this [one](https://smile.amazon.com/gp/product/B012CH5F58/ref=oh_aui_search_asin_title?ie=UTF8&psc=1)
 
 License:
 
